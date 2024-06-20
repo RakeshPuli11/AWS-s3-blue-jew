@@ -18,7 +18,7 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: (req, file, cb) => {
-    const folder = file.fieldname;
+    const folder = "novia"+file.fieldname;
     const uniquePrefix = Date.now().toString();
     const fullPath = `${folder}/${uniquePrefix}-${file.originalname}`;
     cb(null, fullPath);
@@ -27,7 +27,7 @@ const storage = multerS3({
 
 const upload = multer({ storage: storage }).fields([
   { name: 'carousal', maxCount: 2 },
-  { name: 'about', maxCount: 2 },
+  { name: 'about', maxCount: 3 },
   { name: 'products', maxCount: 6 }
 ]);
 
@@ -69,52 +69,12 @@ const uploadFiles = (req, res) => {
 
 const getAllContent = async (req, res)=>{
   try {
-    const baseUrl = 'http://localhost:3000/public';
-    const data = {
-      title: "hello",
-      about:[
-        `${baseUrl}/About/rect1.png`,
-        `${baseUrl}/About/rect2.png`
-      ],
-      carousal: [
-        `${baseUrl}/carousal/corousal.png`, 
-        `${baseUrl}/carousal/corousal2.png`
-      ],
-      products:[
-        {
-        product:`${baseUrl}/Products/r1.png`,
-        caption:"Ring"
-        },
-        {
-          product:`${baseUrl}/Products/r2.png`,
-
-          caption:"Chain"
-          },
-          {
-            product:`${baseUrl}/Products/r3.png`,
-            caption:"Necklace"
-            },
-            {
-              product:`${baseUrl}/Products/r4.png`,
-              caption:"Ear rings"
-              },
-              {
-                product:`${baseUrl}/Products/r5.png`,
-                caption:"Pendants"
-                },
-                {
-                  product:`${baseUrl}/Products/r6.png`,
-                  caption:"Bangles"
-                  },
-      ],
-    };
-
-    res.status(200).json(data);
-  } catch (err) {
-    console.error('Error reading images:', err);
-    res.status(500).json({ error: 'Failed to read images' });
+    const content = await loadContent.findById(req.params.id);
+    res.status(200).json(content);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch content from database' });
   }
 };
 
 
-module.exports = { uploadFiles };
+module.exports = { uploadFiles, getAllContent};
