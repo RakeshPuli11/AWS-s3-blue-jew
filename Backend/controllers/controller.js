@@ -38,18 +38,19 @@ const uploadFiles = (req, res) => {
     }
 
     try {
+      const jsonData = JSON.parse(req.body.data);
+
       const carousalImages = req.files.carousal ? req.files.carousal.map(file => file.location) : [];
       const aboutImages = req.files.about ? req.files.about.map(file => file.location) : [];
-      const captions = JSON.parse(req.body.captions || '[]');
       const productImages = req.files.products ? req.files.products.map((file, index) => ({
         product: file.location,
-        caption: captions[index]
+        caption: jsonData.content[index] || ''
       })) : [];
 
       const content = new loadContent({
-        title: req.body.title,
-        phonenumber: req.body.phonenumber,
-        email: req.body.email,
+        title: jsonData.title,
+        phonenumber: jsonData.phonenumber,
+        email: jsonData.email,
         carousal: carousalImages,
         about: aboutImages,
         products: productImages
@@ -63,7 +64,6 @@ const uploadFiles = (req, res) => {
     }
   });
 };
-
 
 
 
