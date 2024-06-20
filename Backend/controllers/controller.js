@@ -40,12 +40,16 @@ const uploadFiles = (req, res) => {
     try {
       const carousalImages = req.files.carousal ? req.files.carousal.map(file => file.location) : [];
       const aboutImages = req.files.about ? req.files.about.map(file => file.location) : [];
-      const productImages = req.files.products ? req.files.products.map(file => ({ product: file.location, caption: '' })) : [];
+      const captions = JSON.parse(req.body.captions || '[]');
+      const productImages = req.files.products ? req.files.products.map((file, index) => ({
+        product: file.location,
+        caption: captions[index]
+      })) : [];
 
       const content = new loadContent({
-        title: req.body.title || '',
-        phonenumber: req.body.number || '',
-        email: req.body.email || '',
+        title: req.body.title,
+        phonenumber: req.body.phonenumber,
+        email: req.body.email,
         carousal: carousalImages,
         about: aboutImages,
         products: productImages
@@ -59,6 +63,7 @@ const uploadFiles = (req, res) => {
     }
   });
 };
+
 
 
 
