@@ -4,7 +4,7 @@ const router = express.Router();
 
 
 router.post('/singlefileupload', uploadFiles);
-router.get('/getallcontent/:id', getAllContent);
+router.get('/getallcontent/:title', getAllContent);
 
 
 module.exports = router;

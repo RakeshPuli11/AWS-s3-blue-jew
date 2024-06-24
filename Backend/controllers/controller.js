@@ -18,7 +18,7 @@ const storage = multerS3({
     cb(null, { fieldName: file.fieldname });
   },
   key: (req, file, cb) => {
-    const folder = "novia"+file.fieldname;
+    const folder = file.fieldname;
     const uniquePrefix = Date.now().toString();
     const fullPath = `${folder}/${uniquePrefix}-${file.originalname}`;
     cb(null, fullPath);
@@ -26,8 +26,8 @@ const storage = multerS3({
 });
 
 const upload = multer({ storage: storage }).fields([
-  { name: 'carousal', maxCount: 2 },
-  { name: 'about', maxCount: 3 },
+  { name: 'carousal', maxCount: 5 },
+  { name: 'about', maxCount: 5 },
   { name: 'products', maxCount: 6 }
 ]);
 
@@ -69,7 +69,7 @@ const uploadFiles = (req, res) => {
 
 const getAllContent = async (req, res)=>{
   try {
-    const content = await loadContent.findById(req.params.id);
+    const content = await loadContent.findOne({ title: req.params.title });
     res.status(200).json(content);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch content from database' });
