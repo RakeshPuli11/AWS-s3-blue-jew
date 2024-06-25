@@ -28,7 +28,7 @@ const storage = multerS3({
 const upload = multer({ storage: storage }).fields([
   { name: 'carousal', maxCount: 5 },
   { name: 'about', maxCount: 5 },
-  { name: 'products', maxCount: 6 }
+  { name: 'products', maxCount: 7 }
 ]);
 
 const uploadFiles = (req, res) => {
@@ -75,6 +75,7 @@ const getAllContent = async (req, res)=>{
     res.status(500).json({ error: 'Failed to fetch content from database' });
   }
 };
+
 
 
 module.exports = { uploadFiles, getAllContent};
